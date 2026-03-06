@@ -39,42 +39,49 @@ export default function Admin() {
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.type !== 'application/pdf') {
-      setUploadStatus({ type: 'error', message: 'Please upload a PDF file' });
+    if (file.type !== "application/pdf") {
+      setUploadStatus({ type: "error", message: "Please upload a PDF file" });
       return;
     }
 
     setUploading(true);
-    setUploadStatus({ type: null, message: '' });
 
     const formData = new FormData();
     formData.append("pdf", file);
 
     try {
+
       const response = await fetch(`${API_URL}/api/admin/upload`, {
-        method: 'POST',
-        body: formData,
+        method: "POST",
+        body: formData
       });
 
       if (!response.ok) throw new Error('Upload failed');
 
-      const data = await response.json();
       setUploadStatus({
-        type: 'success',
-        message: 'Document uploaded and processed successfully',
+        type: "success",
+        message: "Document uploaded successfully"
       });
 
       fetchDocuments();
-      e.target.value = '';
+
     } catch (error) {
-      setUploadStatus({ type: 'error', message: 'Failed to upload document' });
-      console.error('Upload error:', error);
+
+      setUploadStatus({
+        type: "error",
+        message: "Failed to upload document"
+      });
+
     } finally {
+
       setUploading(false);
+
     }
+
   };
 
   const handleDelete = async (id: string, name: string) => {

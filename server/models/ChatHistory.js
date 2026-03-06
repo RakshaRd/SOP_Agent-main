@@ -1,10 +1,15 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const ChatHistorySchema = new mongoose.Schema({
     question: String,
     answer: String,
     sources: Array,
-    createdAt: { type: Date, default: Date.now }
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 });
 
-module.exports = mongoose.model("ChatHistory", ChatHistorySchema);
+const ChatHistory = mongoose.model("ChatHistory", ChatHistorySchema);
+
+export default ChatHistory;

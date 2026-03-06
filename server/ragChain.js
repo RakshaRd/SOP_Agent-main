@@ -1,24 +1,32 @@
-const { ChatGoogleGenerativeAI } = require("@langchain/google-genai");
-
-const llm = new ChatGoogleGenerativeAI({
-    model: "gemini-1.5-flash",
-    apiKey: process.env.GEMINI_API_KEY
-});
+import axios from "axios";
 
 async function askLLM(context, question) {
+
     const prompt = `
-You are an SOP assistant.
-Answer ONLY from the context.
-If the answer is not present, say "I don't know."
+You are an enterprise SOP assistant.
+
+Answer ONLY using the provided SOP context.
+
+If the answer is not in the context, say:
+"I don't know based on the uploaded SOP documents."
 
 Context:
 ${context}
 
 Question:
 ${question}
-  `;
-    const response = await llm.invoke(prompt);
-    return response.content;
+`;
+
+    const response = await axios.post(
+        "http://localhost:11434/api/generate",
+        {
+            model: "llama3",
+            prompt: prompt,
+            stream: false
+        }
+    );
+
+    return response.data.response;
 }
 
-module.exports = askLLM;
+export default askLLM;

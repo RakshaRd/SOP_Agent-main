@@ -1,12 +1,10 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const SopChunkSchema = new mongoose.Schema({
     text: String,
     embedding: [Number],
-    source: {
-        fileName: String,
-        page: Number
-    }
+    page: Number,
+    source: String
 });
 
-module.exports = mongoose.model("SopChunk", SopChunkSchema);
+export default mongoose.model("SopChunk", SopChunkSchema);

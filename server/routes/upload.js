@@ -1,63 +1,62 @@
-const express = require("express");
-const multer = require("multer");
-const pdf = require("pdf-parse");
-const SopChunk = require("../models/SopChunk");
-const generateEmbedding = require("../services/embedding");
+import express from "express";
+import multer from "multer";
+import pdf from "pdf-parse";
+import fs from "fs";
+import { chunkText } from "../utils/chunker.js";
+import { createEmbedding } from "../utils/embedding.js";
+import Document from "../models/Document.js";
 
 const router = express.Router();
 
-const upload = multer({
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
-});
+const upload = multer({ dest: "uploads/" });
 
-router.post("/", upload.single("file"), async (req, res) => {
+router.post("/upload", upload.single("file"), async (req, res) => {
     try {
-        console.log("➡️ Upload request");
 
-        if (!req.file) {
-            console.log("❌ No file received");
-            return res.status(400).json({ error: "No file received" });
+        console.log("File received:", req.file.originalname);
+
+        const pdfData = await pdf(fs.readFileSync(req.file.path));
+
+        console.log("PDF parsed");
+
+        const text = pdfData.text;
+
+        const chunks = chunkText(text);
+
+        console.log("Chunks created:", chunks.length);
+
+        const embeddings = [];
+
+        for (const chunk of chunks.slice(0, 10)) {
+            const embedding = await createEmbedding(chunk);
+            embeddings.push({ text: chunk, embedding });
         }
 
-        console.log("✅ File:", req.file.originalname);
+        console.log("Embeddings generated");
 
-        const parsed = await pdf(req.file.buffer);
-        const text = parsed.text;
+        const doc = new Document({
+            name: req.file.originalname,
+            chunks: embeddings
+        });
 
-        if (!text || text.trim().length === 0) {
-            return res.status(400).json({ error: "Empty or scanned PDF" });
-        }
+        await doc.save();
 
-        const chunks = [];
-        const size = 1000;
-        const overlap = 100;
+        console.log("Document saved");
 
-        for (let i = 0; i < text.length; i += size - overlap) {
-            chunks.push(text.slice(i, i + size));
-        }
+        res.json({
+            success: true,
+            file: req.file.originalname
+        });
 
-        console.log("📄 Chunks:", chunks.length);
+    } catch (error) {
 
-        for (const chunk of chunks) {
-            const embedding = await generateEmbedding(chunk);
+        console.error("UPLOAD ERROR:", error);
 
-            await SopChunk.create({
-                text: chunk,
-                embedding,
-                source: {
-                    fileName: req.file.originalname,
-                    page: 1
-                }
-            });
-        }
-
-        console.log("✅ SOP stored in MongoDB");
-        res.json({ message: "SOP uploaded & indexed" });
-
-    } catch (err) {
-        console.error("❌ Upload failed:", err);
-        res.status(500).json({ error: "Upload failed" });
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
 });
 
-module.exports = router;
+export default router;

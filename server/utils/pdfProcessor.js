@@ -1,18 +1,28 @@
-import pdfParse from "pdf-parse";
+import pdf from "pdf-parse";
 
 export async function processPDF(buffer) {
-  const data = await pdfParse(buffer);
 
-  if (!data.text || !data.text.trim()) {
-    throw new Error("PDF contains no readable text");
-  }
+  const data = await pdf(buffer);
 
-  // ✅ SPLIT INTO STRING CHUNKS ONLY
-  const chunks = data.text
-    .split("\n")
-    .map(line => line.trim())
-    .filter(Boolean)
-    .slice(0, 10); // limit for speed
+  const pages = data.text.split("\n\n");
 
-  return chunks; // ⬅️ array of STRINGS
+  const chunks = [];
+
+  pages.forEach((pageText, index) => {
+
+    const chunkSize = 1000;
+
+    for (let i = 0; i < pageText.length; i += chunkSize) {
+
+      chunks.push({
+        text: pageText.slice(i, i + chunkSize),
+        page: index + 1
+      });
+
+    }
+
+  });
+
+  return chunks;
+
 }

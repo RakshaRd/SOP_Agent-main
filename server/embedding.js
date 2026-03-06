@@ -1,11 +1,16 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+import axios from "axios";
 
 async function generateEmbedding(text) {
-    const model = genAI.getGenerativeModel({ model: "text-embedding-004" });
-    const result = await model.embedContent(text);
-    return result.embedding.values;
+
+    const response = await axios.post(
+        "http://127.0.0.1:11434/api/embeddings",
+        {
+            model: "nomic-embed-text",
+            prompt: text
+        }
+    );
+
+    return response.data.embedding;
 }
 
-module.exports = generateEmbedding;
+export default generateEmbedding;
