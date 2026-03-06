@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 import cors from "cors";
 import multer from "multer";
 import dotenv from "dotenv";
-
 import Document from "./models/Document.js";
 import Embedding from "./models/Embedding.js";
 import { processPDF } from "./utils/pdfProcessor.js";
