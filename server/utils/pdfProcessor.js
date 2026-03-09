@@ -10,7 +10,7 @@ export async function processPDF(buffer) {
 
   pages.forEach((pageText, index) => {
 
-    const chunkSize = 1000;
+    const chunkSize = 500;
 
     for (let i = 0; i < pageText.length; i += chunkSize) {
 

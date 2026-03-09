@@ -99,7 +99,7 @@ router.post("/ask", async (req, res) => {
 
         bestChunks.sort((a, b) => b.score - a.score);
 
-        const topChunks = bestChunks.slice(0, 3);
+        const topChunks = bestChunks.slice(0, 2);
 
         if (!topChunks[0] || topChunks[0].score < 0.3) {
 
