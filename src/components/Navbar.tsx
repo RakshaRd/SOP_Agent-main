@@ -23,6 +23,12 @@ export default function Navbar() {
             >
               Admin
             </Link>
+            <Link
+              to="/login"
+              className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium"
+            >
+              Login
+            </Link>
           </div>
         </div>
       </div>
