@@ -59,19 +59,19 @@ export default function Query() {
 
   return (
 
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-[#1C1C1C] py-12 text-[#EAEAEA]">
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto px-6">
 
         {/* Header */}
 
-        <div className="text-center mb-8">
+        <div className="text-center mb-10">
 
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold mb-2 text-[#EAEAEA]">
             Ask Your SOP Question
           </h1>
 
-          <p className="text-gray-600">
+          <p className="text-gray-400">
             Get answers only from uploaded SOP documents
           </p>
 
@@ -79,9 +79,9 @@ export default function Query() {
 
         {/* Form */}
 
-        <form onSubmit={handleSubmit} className="mb-8">
+        <form onSubmit={handleSubmit} className="mb-10">
 
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-[#262626] backdrop-blur-xl border border-[#333333] rounded-2xl shadow-lg p-8">
 
             <div className="flex items-start space-x-4">
 
@@ -93,14 +93,14 @@ export default function Query() {
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
                   placeholder="Type your question here..."
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 resize-none"
+                  className="w-full px-4 py-3 bg-[#202020] border border-[#333333] rounded-lg focus:ring-2 focus:ring-[#C08457] focus:border-[#C08457] resize-none text-gray-200"
                   rows={4}
                 />
 
                 <button
                   type="submit"
                   disabled={loading || !question.trim()}
-                  className="mt-4 w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 flex items-center justify-center"
+                  className="mt-4 w-full bg-[#C08457] hover:opacity-90 px-6 py-3 rounded-lg font-medium text-black flex items-center justify-center transition transform hover:scale-[1.02] disabled:bg-gray-600"
                 >
 
                   {loading ? (
@@ -126,7 +126,7 @@ export default function Query() {
 
         {error && (
 
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+          <div className="bg-red-900/30 border border-red-700 text-red-400 px-4 py-3 rounded-lg mb-6">
             {error}
           </div>
 
@@ -136,13 +136,13 @@ export default function Query() {
 
         {result && (
 
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <div className="bg-[#262626] backdrop-blur-xl border border-[#333333] rounded-2xl shadow-lg p-8 mb-6">
 
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-xl font-semibold mb-4">
               Answer
             </h2>
 
-            <p className="text-gray-700 whitespace-pre-wrap">
+            <p className="text-gray-300 whitespace-pre-wrap leading-relaxed">
               {result.answer}
             </p>
 
@@ -150,27 +150,27 @@ export default function Query() {
 
             {result.sources && result.sources.length > 0 && (
 
-              <div className="mt-6 pt-6 border-t">
+              <div className="mt-6 pt-6 border-t border-[#333333]">
 
-                <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                  <FileText className="w-5 h-5 mr-2" />
+                <h3 className="text-lg font-semibold mb-4 flex items-center">
+                  <FileText className="w-5 h-5 mr-2 text-[#C08457]" />
                   Source Citations
                 </h3>
 
-                <div className="space-y-2">
+                <div className="space-y-3">
 
                   {result.sources.map((source, index) => (
 
                     <div
                       key={index}
-                      className="bg-blue-50 border border-blue-200 rounded-lg p-4"
+                      className="bg-[#202020] border border-[#333333] rounded-xl p-4 hover:border-[#C08457] transition"
                     >
 
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium text-gray-200">
                         {source.documentName}
                       </p>
 
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-400">
                         Page {source.pageNumber}
                       </p>
 
@@ -193,5 +193,4 @@ export default function Query() {
     </div>
 
   );
-
 }

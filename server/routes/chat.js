@@ -99,7 +99,7 @@ router.post("/ask", async (req, res) => {
 
         bestChunks.sort((a, b) => b.score - a.score);
 
-        const topChunks = bestChunks.slice(0, 2);
+        const topChunks = bestChunks.slice(0, 1);
 
         if (!topChunks[0] || topChunks[0].score < 0.3) {
 
@@ -120,7 +120,7 @@ router.post("/ask", async (req, res) => {
         const response = await axios.post(
             "http://127.0.0.1:11434/api/generate",
             {
-                model: "llama3",
+                model: "phi3:mini",
                 prompt: `
 Answer ONLY using the context below.
 
@@ -130,7 +130,11 @@ ${context}
 Question:
 ${question}
 `,
-                stream: false
+                stream: false,
+                options: {
+                    num_predict: 80,
+                    temperature: 0.1
+                }
             }
         );
 

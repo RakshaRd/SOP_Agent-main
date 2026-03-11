@@ -3,7 +3,6 @@ import Navbar from './components/Navbar';
 import Landing from './pages/Landing';
 import Query from './pages/Query';
 import Admin from './pages/Admin';
-import Login from './pages/Login';
 
 function App() {
   return (
@@ -14,7 +13,6 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/query" element={<Query />} />
           <Route path="/admin" element={<Admin />} />
-          <Route path="/login" element={<Login />} />
         </Routes>
       </div>
     </Router>
